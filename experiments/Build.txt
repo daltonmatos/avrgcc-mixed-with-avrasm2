@@ -1,0 +1,6 @@
+Build with:
+
+avr-gcc -mmcu=atmega328p -Os -DF_CPU=20000000 -o main.elf main.c
+avr-objcopy -I elf32-avr -O ihex -j .text -j .data main.elf main.hex
+
+Burn the .hex as usual
