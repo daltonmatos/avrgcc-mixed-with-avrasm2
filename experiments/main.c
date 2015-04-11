@@ -7,14 +7,14 @@
 
 int main(void){
 
-  DDRB |= (1 << PB5); /* PIN13 (internal led) as output*/
+  DDRB |= _BV(PB5); /* PIN13 (internal led) as output*/
 
   for (;;){
-    PORTB |= (1 << PB5); /* HIGH */
-    _delay_ms(2000);
+    PORTB |= _BV(PB5); /* HIGH */
+    //_delay_ms(2000);
     
-    PORTB &= ~(1 << PB5); /* LOW */
-    _delay_ms(2000);
+    PORTB &= ~_BV(PB5); /* LOW */
+    _delay_ms(5000);
   }
 
   return 0;
