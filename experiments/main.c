@@ -11,10 +11,10 @@ int main(void){
 
   for (;;){
     PORTB |= _BV(PB5); /* HIGH */
-    //_delay_ms(2000);
+    _delay_ms(500);
     
     PORTB &= ~_BV(PB5); /* LOW */
-    _delay_ms(5000);
+    _delay_ms(500);
   }
 
   return 0;
