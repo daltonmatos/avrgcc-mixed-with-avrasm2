@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Object files
 *.o
 *.ko
@@ -30,3 +31,4 @@
 
 # Debug files
 *.dSYM/
+build/
