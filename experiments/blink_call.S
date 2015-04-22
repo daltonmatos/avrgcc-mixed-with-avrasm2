@@ -9,6 +9,7 @@
 
 _blinks:
   call _real_code
+  call _clear
   ret
 
 _real_code:
@@ -17,3 +18,6 @@ _real_code:
   ;clr %r1
   ;clr %r25
   ret 
+
+_clear:
+  ret
