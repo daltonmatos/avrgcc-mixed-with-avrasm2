@@ -2,7 +2,7 @@
 .include "m328Pdef.inc"
 
 ;.org 0x0080
-.org 0x0040
+.org 0x0000
 
 
 _blinks:
