@@ -79,7 +79,11 @@ for line in sys.stdin:
 
 #print symbols_addr_in_elf
 
+#This is a special entry point
+for _0_addr_symbols in symbols_by_addr[0]:
+    print _0_addr_symbols, "0x0000"
 
+# Print all other symbols hat were found in the ELF file
 for _s in symbols_addr_in_elf:
     print _s, symbols_addr_in_elf[_s], " ".join(str(item) for item in instructions_for_symbols.get(_s, []))
 
