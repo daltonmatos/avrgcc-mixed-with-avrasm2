@@ -14,9 +14,13 @@ avr-objcopy -j .sec1 -I ihex -O binary build/${ASM_SRC}.hex build/${ASM_SRC}.bin
 #avr-objcopy --rename-section .data=.progmem.data,contents,alloc,load,readonly,data  -I binary -O elf32-avr build/${ASM_SRC}.bin build/${ASM_SRC}.elf
 avr-objcopy --rename-section .data=.text,contents,alloc,load,readonly,code -I binary -O elf32-avr build/${ASM_SRC}.bin build/${ASM_SRC}.elf
 
-cd build
-../tools/elf-add-symbol ${ASM_SRC}.elf
-cd -
+
+#Generate output to reconstruct the symbol table and relocation table
+avr-objdump -d build/${ASM_SRC}.elf| python2 tools/extract-symbols-metadata.py build/${ASM_SRC}.map > build/${ASM_SRC}.symtab
+
+#cd build
+#../tools/elf-add-symbol ${ASM_SRC}.elf
+#cd -
 
 
 #avr-gcc -mmcu=atmega328p -Os -DF_CPU=16000000 -DASM_SYM=${SYMBOL_NAME} -o build/main_${ASM_SRC}.elf main.c build/${ASM_SRC}.elf
