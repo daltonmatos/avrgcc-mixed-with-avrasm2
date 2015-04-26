@@ -1,7 +1,6 @@
 .include "../../Source/m644Pdef.inc"
 
 
-null:       .db 0, 0
 
 
 .org 0x0000
@@ -63,7 +62,17 @@ font4x6:
 
 .include "miscsubs.asm"
 .include "contrast.asm"
+
+null:       .db 0, 0
 .include "ST7565.asm"
+
+
+.macro print_addr
+  ldz @0
+  movw x, z
+  call PrintNumberLF
+  lrv X1, 0
+.endm
 
 
 main:
@@ -83,6 +92,7 @@ main:
   call LcdUpdate
   call LcdClear
   call LcdUpdate
+
   lrv X1, 0
   lrv Y1, 0
   ldz hello*2
@@ -92,10 +102,13 @@ main:
   lrv Y1, 12
   ldi t, 3
 
-  ;call PrintHeader
-  ldz sqz6*2
-  call PrintStringArray
+  lrv X1, 0
+  print_addr hello
+  print_addr sqz3
+  print_addr null
+  print_addr sqz6
   
+
 
   call LcdUpdate
 
@@ -104,6 +117,10 @@ main:
   ;BuzzerOff
 _loop:
   jmp _loop
+
+
+
+  
 
 
 hello:  .db "HELLO", 0
