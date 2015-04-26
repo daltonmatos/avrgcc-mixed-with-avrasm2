@@ -92,25 +92,25 @@ int main(int argc, char** argv){
     }
   }
 
-  std::string sym_name(argv[2]);
-  std::string addr_str(argv[3]);
+  std::string sym_name;
+  std::string addr_str;
   std::string sym_usage; // Which instructions use this symbol?
 
   int sym_addr;
   
   std::stringstream ss;
-  ss << addr_str;
-  ss >> std::hex >> sym_addr;
+  //ss << addr_str;
+  //ss >> std::hex >> sym_addr;
 
 
 
-  if (argc > 4){
+  /*if (argc > 4){
     int i;
     for (i=4; i< argc; i++){
       sym_usage += argv[i];
       sym_usage += " ";
     }
-  }
+  }*/
 
   symbol_section_accessor syma(elf_src, symtab_sec);
   string_section_accessor stra(strtab_sec);
@@ -126,7 +126,17 @@ int main(int argc, char** argv){
   // Create relocation table writer
   relocation_section_accessor rela( elf_src, rel_sec );
 
-  add_sym(syma, stra, text_sec, rela, sym_name.c_str(), sym_addr, (sym_usage != ""), sym_usage);
+  std::string s;
+  while (std::cin >> sym_name){
+    //std::cin >> sym_name;
+    std::cin >> std::hex >> sym_addr;
+    std::getline(std::cin, sym_usage);
+
+    //std::cout << sym_name << sym_addr << sym_usage << std::endl;
+    add_sym(syma, stra, text_sec, rela, sym_name.c_str(), sym_addr, (sym_usage != ""), sym_usage);
+    
+  }
+
 
     //syma.add_symbol(stra, "_blinks", 0x0, 9, STB_GLOBAL, STT_NOTYPE, 0, text_sec->get_index()); 
     //Elf_Word _real_code_to_adjust = syma.add_symbol(stra, "_real_code", 0xa, 0, STB_GLOBAL, STT_NOTYPE, 0, text_sec->get_index()); 
