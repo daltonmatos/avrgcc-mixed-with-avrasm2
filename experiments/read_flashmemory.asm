@@ -1,6 +1,6 @@
 .include "m328Pdef.inc"
 
-.equ n = 0x8c
+.equ n = 0x46
 
 _blinks:
   ldi zl, low(n*2)
@@ -10,4 +10,4 @@ _blinks:
   mov r24, r0
   ret
 number:
-.db 1, 2
+.db 17, 2
