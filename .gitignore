@@ -33,3 +33,5 @@
 *.dSYM/
 build/
 *.swp
+experiments/tools/elf-add-symbol
+
