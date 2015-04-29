@@ -2,12 +2,20 @@
 
 .equ offset = 0x40
 
+.macro ldz
+
+  ldi zl, low(@0 + (offset * 2))
+  ldi zh, high(@0 + (offset * 2))
+
+
+.endmacro
+
+
 _blinks:
-  ldi zl, low((number+offset) * 2)
-  ldi zh, high((number+offset) * 2)
+  ldz ((number) * 2)
   lpm 
   clr r25
   mov r24, r0
   ret
 number:
-.db 4, 2
+.db 12, 2
