@@ -1,8 +1,7 @@
 
 source ~/.zshrc
-RELOC=1
-
-AVR_CHIP="atmega644p"
+RELOC=${RELOC:-1}
+AVR_CHIP=${AVR_CHIP:-atmega328p}
 
 
 ASM_SRC=${1}
@@ -17,14 +16,22 @@ if [ ${RELOC} -eq 1 ]; then
   SYMBOL_NAME="_blinks"
 fi
 
+
+SYMBOL_NAME=${SYMNAME:-$SYMBOL_NAME}
+
 mkdir -p `dirname ${ASM_SRC}`/build
 
 
 echo "building" ${ASM_SRC}
 echo "Using symbolname="${SYMBOL_NAME}
 echo "symbol prefix="${SYMBOL_PREFIX}
+echo "Building for chip ${AVR_CHIP}"
 
 wine ~/bin/AvrAssembler2/avrasm2.exe ${ASM_SRC} -fI -o ${BUILD_DIR}/${ASM_FILE}.hex -l ${BUILD_DIR}/${ASM_FILE}.lst -m ${BUILD_DIR}/${ASM_FILE}.map
+
+[[ $? -eq 0 ]] || echo "ERRO"
+
+
 avr-objcopy -j .sec1 -I ihex -O binary ${BUILD_DIR}/${ASM_FILE}.hex ${BUILD_DIR}/${ASM_FILE}.bin
 
 #avr-objcopy --rename-section .data=.progmem.data,contents,alloc,load,readonly,data  -I binary -O elf32-avr build/${ASM_SRC}.bin build/${ASM_SRC}.elf
