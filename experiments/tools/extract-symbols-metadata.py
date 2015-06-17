@@ -81,10 +81,15 @@ for line in sys.stdin:
 
 #This is a special entry point
 for _0_addr_symbols in symbols_by_addr[0]:
-    print _0_addr_symbols, "0x0000"
+    print _0_addr_symbols, "I", "0x0000"
 
 # Print all other symbols hat were found in the ELF file
+# Format: <sym_name> <sym_type> <sym_addr> <instructions, ...>
+# sym_type is I=Internal E=External
 for _s in symbols_addr_in_elf:
-    print _s, symbols_addr_in_elf[_s], " ".join("0x%x" % item for item in instructions_for_symbols.get(_s, []))
+    sym_type = "I"
+    if _s == "call_me_maybe":
+        sym_type = "E"
+    print  _s, sym_type, symbols_addr_in_elf[_s], " ".join("0x%x" % item for item in instructions_for_symbols.get(_s, []))
 
 

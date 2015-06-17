@@ -24,13 +24,19 @@ void add_sym(symbol_section_accessor &syma,
              const char *name, 
              const int &addr, 
              bool reloc,
-             std::string sym_usage){
+             std::string sym_usage,
+             std::string sym_type){
 
-  std::cout << "Adding Symbol: " << name << " " << std::hex << addr <<  " reloc=" << reloc << " (" << sym_usage << ")" << std::endl;
+  std::cout << "Adding Symbol: " << name << " " << std::hex << addr <<  " reloc=" << reloc << " (" << sym_usage << ")" << "type=" << sym_type << std::endl;
 
-  Elf_Half _real_code_to_adjust = syma.add_symbol(stra, name, addr, 0, STB_GLOBAL, STT_NOTYPE, 0, text_sec->get_index()); 
+  Elf_Half _real_code_to_adjust;
+  
+  if (sym_type == "I"){
+    _real_code_to_adjust = syma.add_symbol(stra, name, addr, 0, STB_GLOBAL, STT_NOTYPE, 0, text_sec->get_index()); 
+  }else{
+     _real_code_to_adjust = syma.add_symbol(stra, name, 0, 0, STB_GLOBAL, STT_NOTYPE, 0, text_sec->get_index()); 
+  }
  
-
   if (reloc){
     std::string buf;
     std::stringstream ss(sym_usage);
@@ -97,6 +103,7 @@ int main(int argc, char** argv){
   std::string sym_usage; // Which instructions use this symbol?
 
   int sym_addr;
+  std::string sym_type; // I=Internal, E=External
   
   std::stringstream ss;
   //ss << addr_str;
@@ -128,12 +135,12 @@ int main(int argc, char** argv){
 
   std::string s;
   while (std::cin >> sym_name){
-    //std::cin >> sym_name;
+    std::cin >> sym_type;
     std::cin >> std::hex >> sym_addr;
     std::getline(std::cin, sym_usage);
 
     //std::cout << sym_name << sym_addr << sym_usage << std::endl;
-    add_sym(syma, stra, text_sec, rela, sym_name.c_str(), sym_addr, (sym_usage != ""), sym_usage);
+    add_sym(syma, stra, text_sec, rela, sym_name.c_str(), sym_addr, (sym_usage != ""), sym_usage, sym_type);
     
   }
 
