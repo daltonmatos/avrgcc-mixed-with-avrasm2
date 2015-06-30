@@ -77,13 +77,13 @@ for line in sys.stdin:
                     symbols_addr_in_elf[_s] = group_dict['elf_addr']
                     instructions_for_symbols[_s].append(int(group_dict['instr_addr'], 16))
 
-#print symbols_addr_in_elf
+symbols_not_in_elf =  set(symbols_by_name.keys()).difference(set(instructions_for_symbols.keys()))
 
 #This is a special entry point
-for _0_addr_symbols in symbols_by_addr[0]:
-    print _0_addr_symbols, "I", "0x0000"
+for _0_addr_symbols in symbols_not_in_elf:
+    print _0_addr_symbols, "I", "0x%x" % (symbols_by_name[_0_addr_symbols][0] * 2)
 
-# Print all other symbols hat were found in the ELF file
+# Print all other symbols that were found in the ELF file
 # Format: <sym_name> <sym_type> <sym_addr> <instructions, ...>
 # sym_type is I=Internal E=External
 for _s in symbols_addr_in_elf:
