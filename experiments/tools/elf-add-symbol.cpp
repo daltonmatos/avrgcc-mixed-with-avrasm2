@@ -20,6 +20,7 @@ int strhex_to_int(std::string value){
 void add_sym(symbol_section_accessor &syma,
              string_section_accessor &stra,
              section *text_sec,
+             section *null_sec,
              relocation_section_accessor &rela,
              const char *name, 
              const int &addr, 
@@ -34,7 +35,7 @@ void add_sym(symbol_section_accessor &syma,
   if (sym_type == "I"){
     _real_code_to_adjust = syma.add_symbol(stra, name, addr, 0, STB_GLOBAL, STT_NOTYPE, 0, text_sec->get_index()); 
   }else{
-     _real_code_to_adjust = syma.add_symbol(stra, name, 0, 0, STB_GLOBAL, STT_NOTYPE, 0, text_sec->get_index()); 
+    _real_code_to_adjust = syma.add_symbol(stra, name, 0, 0, STB_GLOBAL, STT_NOTYPE, 0, null_sec->get_index()); 
   }
  
   if (reloc){
@@ -62,7 +63,7 @@ int main(int argc, char** argv){
   elf_src.load(argv[1]);
   std::string output_file(argv[1]);
 
-  section *text_sec, *strtab_sec, *shstrtab_sec, *symtab_sec;
+  section *text_sec, *strtab_sec, *shstrtab_sec, *symtab_sec, *null_sec;
 
   /*std::cout << "class=";
   if (elf_src.get_class() == ELFCLASS32){
@@ -94,6 +95,9 @@ int main(int argc, char** argv){
         break;
       case SHT_PROGBITS:
         text_sec = psec;
+        break;
+      case SHT_NULL:
+        null_sec = psec;
         break;
     }
   }
@@ -140,7 +144,7 @@ int main(int argc, char** argv){
     std::getline(std::cin, sym_usage);
 
     //std::cout << sym_name << sym_addr << sym_usage << std::endl;
-    add_sym(syma, stra, text_sec, rela, sym_name.c_str(), sym_addr, (sym_usage != ""), sym_usage, sym_type);
+    add_sym(syma, stra, text_sec, null_sec, rela, sym_name.c_str(), sym_addr, (sym_usage != ""), sym_usage, sym_type);
     
   }
 
