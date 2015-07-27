@@ -1,8 +1,8 @@
  .org 0x0000
 
-_pad:
+_other_routines:
   nop
-; This funcions is just a stub. It's implementation will be in C
+; This funcions is just a stub. Its implementation will be in C
 call_me_maybe:
   nop
 
