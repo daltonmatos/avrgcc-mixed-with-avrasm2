@@ -50,6 +50,12 @@ symbols16x16:
 font4x6:
 ;.include "../../Source/font4x6.asm"
 
+.equ offset = 0x00
+.macro my_ldz
+  ldi zl, low(@0 + (offset * 2))
+  ldi zh, high(@0 + (offset * 2))
+.endmacro
+
 .include "../../Source/constants.asm"
 .include "../../Source/macros.inc"
 .include "../../Source/miscmacros.inc"
@@ -64,12 +70,7 @@ font4x6:
 null:       .db 0, 0
 .include "ST7565.asm"
 
-.equ offset = 0x00
 
-.macro my_ldz
-  ldi zl, low(@0 + (offset * 2))
-  ldi zh, high(@0 + (offset * 2))
-.endmacro
 
 
 .macro print_addr
@@ -94,24 +95,24 @@ hello_main:
 
   lrv FontSelector, f6x8
   call SetDefaultLcdContrast
-  call LcdUpdate
-  call LcdClear
-  call LcdUpdate
+  ;call LcdUpdate
+  ;call LcdClear
+  ;call LcdUpdate
 
   lrv X1, 0
   lrv Y1, 0
-  ldz hello*2
+  my_ldz hello*2
   call PrintString
 
-  lrv X1, 20
-  lrv Y1, 12
-  ldi t, 3
+  ;lrv X1, 20
+  ;lrv Y1, 12
+  ;ldi t, 3
 
-  lrv X1, 0
-  print_addr hello
-  print_addr sqz3
-  print_addr null
-  print_addr sqz6
+  ;lrv X1, 0
+  ;print_addr hello
+  ;print_addr sqz3
+  ;print_addr null
+  ;print_addr sqz6
   
 
 
