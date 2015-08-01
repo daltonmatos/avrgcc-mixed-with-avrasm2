@@ -1,7 +1,7 @@
  .org 0x0000
 
-_other_routines:
-  nop
+;_other_routines:
+;  nop
 ; This funcions is just a stub. Its implementation will be in C
 call_me_maybe:
   nop

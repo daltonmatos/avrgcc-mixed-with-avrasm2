@@ -21,7 +21,7 @@ RE_OPCODE_LOW_BYTE = "(?P<opcodeL>{})".format(HEX_DIGITS)
 RE_OPCODE_ADDR_HIGH_BYTE = "(?P<addrH>{})".format(HEX_DIGITS)
 RE_OPCODE_ADDR_LOW_BYTE = "(?P<addrL>{})".format(HEX_DIGITS)
 RE_MNEMONIC = "(?P<mnemonic>[a-z0-9]+)"
-RE_ELF_ADDR = "(?P<elf_addr>0x{})".format(HEX_DIGITS)
+RE_ELF_ADDR = "(?P<elf_addr>(?:0x|){})".format(HEX_DIGITS)
 
 
 # Opcode com parametro (jmp, call, rcall, etc)
@@ -68,7 +68,6 @@ instructions_for_symbols = defaultdict(list)
 for line in sys.stdin:
     m = OBJDUMP_REGEX.search(line.strip())
     if m:
-        #print line.strip()
         group_dict = m.groupdict()
         if group_dict['addrH'] and group_dict['addrL']:  # This is a branch struction, must be relocated
             addr = int(group_dict['addrH'] + group_dict['addrL'], 16)
