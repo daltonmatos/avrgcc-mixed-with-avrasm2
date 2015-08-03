@@ -91,7 +91,7 @@ LoadLcdContrast:
 
 	my_ldz eeLcdContrast
 	call ReadEeprom			;read from profile #1 only
-	sts LcdContrast, t
+  sts LcdContrast, t
 	ret
 
 

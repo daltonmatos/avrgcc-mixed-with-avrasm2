@@ -394,7 +394,7 @@ PrintChar:
 	ret
 
 TabCh:	.db low(font4x6*2), high(font4x6*2), 4, 6, 4, 0
-	.db low(font6x8*2), high(font6x8*2), 6, 8, 6, 0
+	.db low(font6x8*2 + offset*2), high(font6x8*2 + offset*2), 6, 8, 6, 0
 	.db low(font8x12*2), high(font8x12*2), 8, 12, 12, 0
 	.db low(font12x16*2), high(font12x16*2), 12, 16, 24, 0
 	.db low(symbols16x16*2), high(symbols16x16*2), 16, 16, 32, 0
@@ -651,8 +651,9 @@ SetPixel:				; Destroys: t
 	push xl
 	push xh
 
-	ldi zl, low(LcdBuffer)		;Z = LcdBuffer + int(Ypos/8)*128 + Xpos
-	ldi zh, high(LcdBuffer)
+	;ldi zl, low(LcdBuffer)		;Z = LcdBuffer + int(Ypos/8)*128 + Xpos
+	;ldi zh, high(LcdBuffer)
+  my_ldz LcdBuffer
 
 	lds xl, Ypos
 	ldi xh, 0
@@ -725,8 +726,9 @@ LcdUpdate:
 	push zl
 	push zh
 
-	ldi zl, low(lcd_cd*2)	;refresh LCD control registers
-	ldi zh, high(lcd_cd*2)
+	;ldi zl, low(lcd_cd*2)	;refresh LCD control registers
+	;ldi zh, high(lcd_cd*2)
+  my_ldz lcd_cd*2
 
 qq2:	lpm yl, z+
 	cpi yl, 0xff
@@ -745,8 +747,10 @@ qq1:	ldi yl, 0x81		;set contrast
 
 	ldi xl, 0xb0	
 
-	ldi zl, low(LcdBuffer)
-	ldi zh, high(LcdBuffer)
+	;ldi zl, low(LcdBuffer)
+	;ldi zh, high(LcdBuffer)
+  my_ldz LcdBuffer
+
 
 qq3:	mov yl, xl		;set page address
 	rcall LcdCommand

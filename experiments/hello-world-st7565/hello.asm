@@ -50,8 +50,8 @@ symbols16x16:
 font4x6:
 ;.include "../../Source/font4x6.asm"
 
-;.equ offset = 0x4a
-.equ offset = 0x00
+.equ offset = 0x4a
+;.equ offset = 0x00
 
 .macro my_ldz
   ldi zl, low(@0 + (offset * 2))
@@ -91,30 +91,40 @@ hello_main:
   ;BuzzerOn
   ;BuzzerOff
   
-  lrv FontSelector, 0x4
-  ;call SetDefaultLcdContrast
+  lrv FontSelector, f6x8
+  call SetDefaultLcdContrast
+  ldi t, 0x50
+  sts LcdContrast, t
+  call LoadLcdContrast
 
-  ;lrv X1, 0
-  ;lrv Y1, 0
-  ;my_ldz hello*2
-  ;call PrintString
-  ;call LcdUpdate
+  lrv X1, 0
+  lrv Y1, 0
+  my_ldz hello*2
+  call PrintString
+  
+  ;ldi t, 1
+  ;sts Xpos, t
+  ;sts Ypos, t
+  ;call SetPixel
+  call LcdUpdate
+
+  
 
   clr r22
   clr r23
   
   lds r23, FontSelector
   
-_loop:
-  LedOn
-  ldx 200
-  call WaitXms
-  LedOff
-  ldx 200
-  call WaitXms
-  inc r22
-  cp r22, r23
-  brne _loop
+;_loop:
+;  LedOn
+;  ldx 200
+;  call WaitXms
+;  LedOff
+;  ldx 200
+;  call WaitXms
+;  inc r22
+;  cp r22, r23
+;  brne _loop
 
 _loop2:
   jmp _loop2
