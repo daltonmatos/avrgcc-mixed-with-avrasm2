@@ -125,7 +125,7 @@ print14:clr flagLeadingZero	;no
 	ldi t, '-'		;print minus sign
 	rcall PrintChar
 
-print7: ldz convt*2
+print7: my_ldz convt*2
 	ldi Counter, 5	
 
 print8:	ldi Digit, 0xff
@@ -203,14 +203,14 @@ PrintHeader:
 PrintWarningHeader:
 
 	lrv X1, 16
-	ldz warning*2
+	my_ldz warning*2
 	rcall PrintHeader
 	ret
 
 
 PrintMotto:
 	lrv X1, 0
-	ldz motto*2
+	my_ldz motto*2
 	call PrintString
 	ret
 
@@ -238,7 +238,7 @@ PrintCW:			;OBSERVE: This subroutine must follow immediately after 'PrintCCW'!
 PrintMenuFooter:
 	lrv X1, 0
 	lrv Y1, 57
-	ldz updown*2
+	my_ldz updown*2
 	rcall PrintString
 	ret
 
@@ -246,9 +246,9 @@ PrintMenuFooter:
 PrintSelectFooter:
 	lrv X1, 0
 	lrv Y1, 57
-	ldz bckprev*2
+	my_ldz bckprev*2
 	rcall PrintString
-	ldz nxtsel*2
+	my_ldz nxtsel*2
 	rcall PrintString
 	ret
 
@@ -257,9 +257,9 @@ PrintStdFooter:
 	lrv X1, 0
 	lrv Y1, 57
 	pushz
-	ldz bckprev*2
+	my_ldz bckprev*2
 	rcall PrintString
-	ldz nxtchng*2
+	my_ldz nxtchng*2
 	rcall PrintString
 	popz
 	ret
@@ -269,7 +269,7 @@ PrintBackFooter:
 	lrv X1, 0
 	lrv Y1, 57
 	pushz
-	ldz back*2
+	my_ldz back*2
 	rcall PrintString
 	popz
 	ret
@@ -279,7 +279,7 @@ PrintChangeFooter:
 
 	lrv X1, 90
 	lrv Y1, 57
-	ldz change*2
+	my_ldz change*2
 	rcall PrintString
 	ret
 
@@ -288,7 +288,7 @@ PrintOkFooter:
 	lrv X1, 114
 	lrv Y1, 57
 	pushz
-	ldz ok*2
+	my_ldz ok*2
 	rcall PrintString
 	popz
 	ret
@@ -298,7 +298,7 @@ PrintContinueFooter:
 	lrv X1, 78
 	lrv Y1, 57
 	pushz
-	ldz cont*2
+	my_ldz cont*2
 	rcall PrintString
 	popz
 	ret
@@ -367,7 +367,7 @@ PrintChar:
 	ldi xh, 6
 	mul xl, xh
 
-	ldz TabCh*2
+	my_ldz TabCh*2
 	add zl, r0
 	adc zh, r1
 

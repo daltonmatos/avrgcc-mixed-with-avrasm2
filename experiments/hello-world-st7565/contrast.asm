@@ -14,12 +14,12 @@ Contrast:
 con11:	call LcdClear12x16
 
 	lrv X1, 46			;header
-	ldz con1*2
+	my_ldz con1*2
 	call PrintHeader
 
 	lrv X1, 0			;LCD contrast
 	lrv Y1, 26
-	ldz con2*2
+	my_ldz con2*2
 	call PrintString
 	clr xh
 	lds xl, LcdContrast
@@ -29,7 +29,7 @@ con11:	call LcdClear12x16
 	;footer
 	lrv X1, 0
 	lrv Y1, 57
-	ldz con6*2
+	my_ldz con6*2
 	call PrintString
 
 	call LcdUpdate
@@ -68,7 +68,7 @@ con18:	cpi t, 0x01			;SAVE?
 	brne con20
 
 	lds xl, LcdContrast
-	ldz eeLcdContrast
+	my_ldz eeLcdContrast
 	call StoreEeVariable8		;save in profile #1 only
 	ret
 
@@ -89,7 +89,7 @@ con6:	.db "BACK  UP   DOWN  SAVE", 0
 
 LoadLcdContrast:
 
-	ldz eeLcdContrast
+	my_ldz eeLcdContrast
 	call ReadEeprom			;read from profile #1 only
 	sts LcdContrast, t
 	ret
@@ -102,7 +102,7 @@ SetDefaultLcdContrast:
 
 	ldi t, 0x24
 	sts LcdContrast, t
-	ldz eeLcdContrast
+	my_ldz eeLcdContrast
 	call WriteEeprom		;save in profile #1 only
 	ret
 

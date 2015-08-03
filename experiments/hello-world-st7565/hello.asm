@@ -50,7 +50,9 @@ symbols16x16:
 font4x6:
 ;.include "../../Source/font4x6.asm"
 
+;.equ offset = 0x4a
 .equ offset = 0x00
+
 .macro my_ldz
   ldi zl, low(@0 + (offset * 2))
   ldi zh, high(@0 + (offset * 2))
@@ -84,49 +86,38 @@ null:       .db 0, 0
 hello_main:
   ldx 100
 	call WaitXms
-
 	call SetupHardware
   
-;call LoadLcdContrast
   ;BuzzerOn
   ;BuzzerOff
-  ;ldi t, 0x30
-  ;sts LcdContrast, t
-
-  lrv FontSelector, f6x8
-  call SetDefaultLcdContrast
-  ;call LcdUpdate
-  ;call LcdClear
-  ;call LcdUpdate
-
-  lrv X1, 0
-  lrv Y1, 0
-  my_ldz hello*2
-  call PrintString
-
-  ;lrv X1, 20
-  ;lrv Y1, 12
-  ;ldi t, 3
+  
+  lrv FontSelector, 0x4
+  ;call SetDefaultLcdContrast
 
   ;lrv X1, 0
-  ;print_addr hello
-  ;print_addr sqz3
-  ;print_addr null
-  ;print_addr sqz6
+  ;lrv Y1, 0
+  ;my_ldz hello*2
+  ;call PrintString
+  ;call LcdUpdate
+
+  clr r22
+  clr r23
   
-
-
-  call LcdUpdate
-
-  ;BuzzerOn
-  ;ldx 50
-  ;BuzzerOff
+  lds r23, FontSelector
+  
 _loop:
-  jmp _loop
+  LedOn
+  ldx 200
+  call WaitXms
+  LedOff
+  ldx 200
+  call WaitXms
+  inc r22
+  cp r22, r23
+  brne _loop
 
-
-
-  
+_loop2:
+  jmp _loop2
 
 
 hello:  .db "HELLO", 0
