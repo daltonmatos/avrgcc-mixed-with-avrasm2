@@ -1,0 +1,39 @@
+
+source ~/.zshrc
+RELOC=${RELOC:-1}
+AVR_CHIP=${AVR_CHIP:-atmega328p}
+
+
+ASM_SRC=${1}
+ASM_FILE=`basename ${1}`
+BUILD_DIR="/tmp"
+
+AVR_ELF_32="/tmp/${ASM_FILE}.elf"
+
+SYMBOL_PREFIX="_binary_`echo ${BUILD_DIR}/${ASM_FILE} | tr / _ | tr - _ | tr . _`_bin"
+SYMBOL_NAME="${SYMBOL_PREFIX}_start"
+
+
+echo "building" ${ASM_SRC}
+echo "symbol prefix="${SYMBOL_PREFIX}
+echo "Building for chip ${AVR_CHIP}"
+
+wine ~/bin/AvrAssembler2/avrasm2.exe ${ASM_SRC} -fI -o ${BUILD_DIR}/${ASM_FILE}.hex -l ${BUILD_DIR}/${ASM_FILE}.lst -m ${BUILD_DIR}/${ASM_FILE}.map
+
+[[ $? -eq 0 ]] || echo "ERRO"
+
+
+avr-objcopy -j .sec1 -I ihex -O binary ${BUILD_DIR}/${ASM_FILE}.hex ${BUILD_DIR}/${ASM_FILE}.bin
+
+avr-objcopy --rename-section .data=.text,contents,alloc,load,readonly,code -I binary -O elf32-avr ${BUILD_DIR}/${ASM_FILE}.bin ${BUILD_DIR}/${ASM_FILE}.elf
+
+avr-strip -N ${SYMBOL_PREFIX}_start ${BUILD_DIR}/${ASM_FILE}.elf
+avr-strip -N ${SYMBOL_PREFIX}_end ${BUILD_DIR}/${ASM_FILE}.elf
+avr-strip -N ${SYMBOL_PREFIX}_size ${BUILD_DIR}/${ASM_FILE}.elf
+
+#Generate output to reconstruct the symbol table and relocation table
+Echo "Generating symbol/relocation tables"
+avr-objdump -d ${BUILD_DIR}/${ASM_FILE}.elf| python2 tools/extract-symbols-metadata.py ${BUILD_DIR}/${ASM_FILE}.map > ${BUILD_DIR}/${ASM_FILE}.symtab
+
+cat ${BUILD_DIR}/${ASM_FILE}.symtab | tools/elf-add-symbol ${BUILD_DIR}/${ASM_FILE}.elf
+
