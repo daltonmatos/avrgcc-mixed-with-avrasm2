@@ -49,7 +49,10 @@ avr-objdump -d ${BUILD_DIR}/${ASM_FILE}.elf| python2 tools/extract-symbols-metad
 if [ ${RELOC} -eq 1 ]; then
   cat ${BUILD_DIR}/${ASM_FILE}.symtab | tools/elf-add-symbol ${BUILD_DIR}/${ASM_FILE}.elf
 fi
+
+echo "Compiling main.c and linking"
 avr-gcc -mmcu=${AVR_CHIP} -Os -DF_CPU=1000000 -DASM_SYM=${SYMBOL_NAME} -o ${BUILD_DIR}/main_${ASM_FILE}.elf main.c ${BUILD_DIR}/${ASM_FILE}.elf
+echo "elf => hex"
 avr-objcopy -I elf32-avr -O ihex -j .text -j .data ${BUILD_DIR}/main_${ASM_FILE}.elf ${BUILD_DIR}/main_${ASM_FILE}.hex
 
 sudo /usr/share/arduino/hardware/tools/avrdude -C /usr/share/arduino/hardware/tools/avrdude.conf -p${AVR_CHIP} -cusbasp -Uflash:w:${BUILD_DIR}/main_${ASM_FILE}.hex:i
