@@ -394,7 +394,7 @@ PrintChar:
 	ret
 
 TabCh:	.db low(font4x6*2), high(font4x6*2), 4, 6, 4, 0
-	.db low(font6x8*2 + offset*2), high(font6x8*2 + offset*2), 6, 8, 6, 0
+	.db low(font6x8*2 + offset), high(font6x8*2 + offset), 6, 8, 6, 0
 	.db low(font8x12*2), high(font8x12*2), 8, 12, 12, 0
 	.db low(font12x16*2), high(font12x16*2), 12, 16, 24, 0
 	.db low(symbols16x16*2), high(symbols16x16*2), 16, 16, 32, 0
