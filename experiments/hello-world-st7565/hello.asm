@@ -36,12 +36,19 @@
 ;
 ;unused: reti
 
-.equ offset = 0x9a
+.equ offset = 0xac
 
 .macro my_ldz
   ldi zl, low(@0 + (offset))
   ldi zh, high(@0 + (offset))
 .endmacro
+
+
+my_print_string:
+  mov zl, r24
+  mov zh, r25
+  call PrintString
+  ret
 
 _offset_check:
     my_ldz _offset_data*2
@@ -85,14 +92,13 @@ null:       .db 0, 0
   lrv X1, 0
 .endm
 
+flashdata_from_asm:
+  nop
 
 hello_main:
  ldx 100
 	call WaitXms
 	call SetupHardware
-  
-  ;BuzzerOn
-  ;BuzzerOff
   
   lrv FontSelector, f6x8
   call SetDefaultLcdContrast
@@ -104,17 +110,21 @@ hello_main:
   lrv Y1, 0
   my_ldz hello*2
   call PrintString
-  
 
   lrv X1, 0
   lrv Y1, 20
-  print_addr _offset_data
-  ;ldi t, 1
-  ;sts Xpos, t
-  ;sts Ypos, t
-  ;call SetPixel
-  call LcdUpdate
+  mov zl, r24
+  mov zh, r25
+  call PrintString
 
+
+  ldi r25, high(hello_from_asm*2 + offset)
+  ldi r24, low(hello_from_asm*2 + offset)
+  lrv X1, 0
+  lrv Y1, 30
+  call flashdata_from_asm
+  
+  call LcdUpdate
   
 ;_loop:
 ;  LedOn
@@ -132,6 +142,7 @@ _loop2:
 
 
 hello:  .db "HELLO", 0
+hello_from_asm:  .db "Hello from ASM via C.", 0
 sqz3:   .db "ACC Trim Roll", 0
 sqz4:   .db "ACC Trim Pitch", 0 ;, 0
 sqz5:   .db "SL Mixing Rate", 0 ;, 0
