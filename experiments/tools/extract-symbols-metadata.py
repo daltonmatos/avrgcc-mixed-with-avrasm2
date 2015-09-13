@@ -87,7 +87,7 @@ for _0_addr_symbols in symbols_not_in_elf:
 # sym_type is I=Internal E=External
 for _s in symbols_addr_in_elf:
     sym_type = "I"
-    if _s in ["call_me_maybe", "flashdata_from_asm"]:
+    if _s in ["call_me_maybe", "flashdata_from_asm", "c_read_flashbyte"]:
         sym_type = "E"
     print  _s, sym_type, symbols_addr_in_elf[_s], " ".join("0x%x" % item for item in instructions_for_symbols.get(_s, []))
 

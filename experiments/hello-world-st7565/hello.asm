@@ -36,7 +36,7 @@
 ;
 ;unused: reti
 
-.equ offset = 0xac
+.equ offset = 0xb2
 
 .macro my_ldz
   ldi zl, low(@0 + (offset))
@@ -92,6 +92,8 @@ null:       .db 0, 0
   lrv X1, 0
 .endm
 
+c_read_flashbyte:
+  nop
 flashdata_from_asm:
   nop
 
@@ -118,12 +120,22 @@ hello_main:
   call PrintString
 
 
-  ldi r25, high(hello_from_asm*2 + offset)
-  ldi r24, low(hello_from_asm*2 + offset)
   lrv X1, 0
   lrv Y1, 30
+  ldi r25, high(hello_from_asm*2 + offset)
+  ldi r24, low(hello_from_asm*2 + offset)
   call flashdata_from_asm
+ 
+
+  lrv X1, 0
+  lrv Y1, 40
   
+  ldi r25, high(flash_byte_from_asm*2 + offset)
+  ldi r24, low(flash_byte_from_asm*2 + offset)
+  call c_read_flashbyte
+  mov t, r24
+  call PrintChar
+ 
   call LcdUpdate
   
 ;_loop:
@@ -143,6 +155,7 @@ _loop2:
 
 hello:  .db "HELLO", 0
 hello_from_asm:  .db "Hello from ASM via C.", 0
+flash_byte_from_asm: .db "X", 0
 sqz3:   .db "ACC Trim Roll", 0
 sqz4:   .db "ACC Trim Pitch", 0 ;, 0
 sqz5:   .db "SL Mixing Rate", 0 ;, 0
