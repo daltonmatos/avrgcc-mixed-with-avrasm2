@@ -1,5 +1,6 @@
 
 source ~/.zshrc
+LINK=${LINK:-1}
 RELOC=${RELOC:-1}
 AVR_CHIP=${AVR_CHIP:-atmega328p}
 
@@ -46,14 +47,16 @@ fi
 #Generate output to reconstruct the symbol table and relocation table
 avr-objdump -d ${BUILD_DIR}/${ASM_FILE}.elf| python2 tools/extract-symbols-metadata.py ${BUILD_DIR}/${ASM_FILE}.map > ${BUILD_DIR}/${ASM_FILE}.symtab
 
-if [ ${RELOC} -eq 1 ]; then
+if [ ${RELOC} -eq 1 -a ${LINK} -eq 1 ]; then
   cat ${BUILD_DIR}/${ASM_FILE}.symtab | tools/elf-add-symbol ${BUILD_DIR}/${ASM_FILE}.elf
 fi
 
-echo "Compiling main.c and linking"
-avr-gcc -mmcu=${AVR_CHIP} -Os -DF_CPU=1000000 -DASM_SYM=${SYMBOL_NAME} -o ${BUILD_DIR}/main_${ASM_FILE}.elf main.c ${BUILD_DIR}/${ASM_FILE}.elf
-echo "elf => hex"
-avr-objcopy -I elf32-avr -O ihex -j .text -j .data ${BUILD_DIR}/main_${ASM_FILE}.elf ${BUILD_DIR}/main_${ASM_FILE}.hex
+if [ $LINK -eq 1 ]; then
+  echo "Compiling main.c and linking"
+  avr-gcc -mmcu=${AVR_CHIP} -Os -DF_CPU=1000000 -DASM_SYM=${SYMBOL_NAME} -o ${BUILD_DIR}/main_${ASM_FILE}.elf main.c ${BUILD_DIR}/${ASM_FILE}.elf
+  echo "elf => hex"
+  avr-objcopy -I elf32-avr -O ihex -j .text -j .data ${BUILD_DIR}/main_${ASM_FILE}.elf ${BUILD_DIR}/main_${ASM_FILE}.hex
+fi
 
-sudo /usr/share/arduino/hardware/tools/avrdude -C /usr/share/arduino/hardware/tools/avrdude.conf -p${AVR_CHIP} -cusbasp -Uflash:w:${BUILD_DIR}/main_${ASM_FILE}.hex:i
+[[ ${FLASH} -eq 1 ]] && sudo /usr/share/arduino/hardware/tools/avrdude -C /usr/share/arduino/hardware/tools/avrdude.conf -p${AVR_CHIP} -cusbasp -Uflash:w:${BUILD_DIR}/main_${ASM_FILE}.hex:i
 
