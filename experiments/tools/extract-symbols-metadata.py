@@ -12,7 +12,6 @@ import sys
 from collections import defaultdict
 import re
 from pprint import pprint
-import ipdb
 
 def write_err(s, *args):
     sys.stderr.write(s + "".join(str(i) for i in args) + "\n")
