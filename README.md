@@ -22,4 +22,4 @@ To compile this example run the following command:
 This will compile all Assembly and C codes, link them, extract the final ``.hex`` file and call avrdude to flash it into the chip memory.
 
 
-The series os posts can be read here: http://daltonmatos.com
+The series os posts can be read here: http://daltonmatos.com/pages/avrgcc-avrasm2-en.html
