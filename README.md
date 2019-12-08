@@ -13,7 +13,7 @@ To be able to build the ``experiments/hello-world-st7565`` code, you will need t
 
 You need to be inside the ``tools`` folder, so make sure you ``cd`` into it before running ``g++``.
 
-Also to run this example, which demonstrates all interactions between C and Assembly, you will need a KK2 flight controller board. =D 
+Also to run this example, which demonstrates all interactions between C and Assembly, you will need a KK2 flight controller board. =D
 
 To compile this example run the following command:
 
@@ -22,4 +22,4 @@ To compile this example run the following command:
 This will compile all Assembly and C codes, link them, extract the final ``.hex`` file and call avrdude to flash it into the chip memory.
 
 
-The series os posts can be read here: http://daltonmatos.com/pages/avrgcc-avrasm2-en.html
+The series os posts can be read here: https://daltonmatos.com/avr/
